@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, response } from 'express';
 import { User, UserDocument, AuthToken } from '../models/User';
 import Bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -57,31 +57,38 @@ export const postLogin = (request: Request, response: Response) => {
     });
 };
 
-export const postSignup = (
+export const postSignup = async (
     request: Request,
     response: Response,
     next: NextFunction
 ) => {
-    const { username, password } = request.body;
+    const { username, password, role } = request.body;
 
     const user = new User({
         username: username,
         password: password,
+        role: role,
     });
-    user.save((error) => {
-        if (error) {
-            return next(error);
-        }
-        signAccessAndRefreshToken({ username: username }, request, response);
-    });
+    await user.save();
+    signAccessAndRefreshToken({ username: username }, request, response);
 };
 
-export const getOwnUser = (request: Request, response: Response) => {
+export const getOwnUser = async (request: Request, response: Response) => {
     if (request.decoded && request.decoded.username) {
-        User.findOne({ username: request.decoded.username }, (error, user) =>
-            user ? response.status(200).json(user) : response.sendStatus(404)
-        );
+        const user = await User.findOne({
+            username: request.decoded.username,
+        }).populate('role');
+        user ? response.status(200).json(user) : response.sendStatus(404);
     } else {
         response.sendStatus(401);
     }
+};
+
+export const getAllUsers = async (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    const users = await User.find({}).populate('role');;
+    response.status(200).json(users);
 };

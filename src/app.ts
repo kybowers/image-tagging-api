@@ -42,6 +42,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.post('/login', userController.postLogin);
 app.post('/users', userController.postSignup);
 app.get('/users/self', validateToken, userController.getOwnUser);
+app.get('/users', userController.getAllUsers);
 app.post('/roles', roleController.createRole);
 app.get('/roles', roleController.getRoles);
 app.put('/roles', roleController.updateRole);

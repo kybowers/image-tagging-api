@@ -19,7 +19,7 @@ const validateAuthToken = (
             request.decoded = <any>jwt.verify(token, process.env.JWT_SECRET);
             next();
         } catch (error) {
-            throw new Error(error);
+            next(error);
         }
     } else {
         response.status(401).send({
