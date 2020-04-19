@@ -1,7 +1,7 @@
 {
     "name": "timage-tagging-api",
     "version": "1.0.0",
-    "description": "Starter application for token based express apps in typescript",
+    "description": "Backend for image tagging workflow application",
     "main": "src/server.js",
     "author": "Kyle Bowers",
     "license": "MIT",
