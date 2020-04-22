@@ -89,6 +89,6 @@ export const getAllUsers = async (
     response: Response,
     next: NextFunction
 ) => {
-    const users = await User.find({}).populate('role');;
+    const users = await User.find({}).populate('role');
     response.status(200).json(users);
 };

@@ -4,8 +4,9 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import mongoose from 'mongoose';
 import helmet from 'helmet';
-import * as userController from './controllers/user';
-import * as roleController from './controllers/role';
+import * as userController from './controllers/userController';
+import * as roleController from './controllers/roleController';
+import * as fileController from './controllers/fileController';
 import validateToken from './utils/validateAuthToken';
 
 
@@ -46,5 +47,9 @@ app.get('/users', userController.getAllUsers);
 app.post('/roles', roleController.createRole);
 app.get('/roles', roleController.getRoles);
 app.put('/roles', roleController.updateRole);
+app.post('/files', validateToken, fileController.createFile);
+app.get('/files', validateToken, fileController.getFiles);
+app.put('/files/:fileId', validateToken, fileController.saveTags);
+app.get('/files/:fileId', validateToken, fileController.getFile);
 
 export default app;
