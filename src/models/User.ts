@@ -5,6 +5,7 @@ import { RoleDocument } from './Role';
 export type UserDocument = mongoose.Document & {
     username: string;
     password: string;
+    tokens: AuthToken[];
     role: RoleDocument;
 };
 
@@ -22,6 +23,7 @@ const userSchema = new mongoose.Schema(
     {
         username: { type: String, unique: true },
         password: String,
+        tokens: Array,
         role: { type: Schema.Types.ObjectId, ref: 'Role' },
     },
     { timestamps: true }
