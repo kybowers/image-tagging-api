@@ -57,8 +57,7 @@ passport.use(
         { header: 'Authorization', prefix: 'Api-Key ' },
         false,
         (apikey, done) => {
-            console.log(apikey)
-            User.findOne({ apikey: apikey }, function (err, user) {
+            User.findOne({ apiKey: apikey }, function (err, user) {
                 if (err) {
                     return done(err);
                 }
@@ -81,4 +80,16 @@ export const isAuthenticated = (
     } else {
         return response.redirect('/login');
     }
+};
+
+export const authenticateAPIKey = (
+    request: Request,
+    response: Response,
+    next: NextFunction
+) => {
+    passport.authenticate('headerapikey', { session: false })(
+        request,
+        response,
+        next
+    );
 };

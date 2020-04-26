@@ -11,7 +11,7 @@ import helmet from 'helmet';
 import * as userController from './controllers/userController';
 import * as roleController from './controllers/roleController';
 import * as fileController from './controllers/fileController';
-import { isAuthenticated } from './middleware/passport';
+import { isAuthenticated, authenticateAPIKey } from './middleware/passport';
 
 const app = express();
 
@@ -57,6 +57,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(authenticateAPIKey);
 
 app.post('/login', userController.postLogin);
 app.get("/logout", userController.logout);
