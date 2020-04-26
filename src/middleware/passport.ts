@@ -1,5 +1,6 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
+import HeaderAPIKeyStrategy from 'passport-headerapikey';
 import { Request, Response, NextFunction } from 'express';
 
 import { User, UserDocument } from '../models/User';
@@ -51,6 +52,25 @@ passport.use(
     )
 );
 
+passport.use(
+    new HeaderAPIKeyStrategy(
+        { header: 'Authorization', prefix: 'Api-Key ' },
+        false,
+        (apikey, done) => {
+            console.log(apikey)
+            User.findOne({ apikey: apikey }, function (err, user) {
+                if (err) {
+                    return done(err);
+                }
+                if (!user) {
+                    return done(null, false);
+                }
+                return done(null, user);
+            });
+        }
+    )
+);
+
 export const isAuthenticated = (
     request: Request,
     response: Response,
@@ -59,22 +79,6 @@ export const isAuthenticated = (
     if (request.isAuthenticated()) {
         return next();
     } else {
-        return response.redirect("/login");
-    }
-};
-
-// I don't think I'll ever need this, but I'll keep it just in case
-export const isAuthorized = (
-    request: Request,
-    response: Response,
-    next: NextFunction
-) => {
-    const provider = request.path.split('/').slice(-1)[0];
-
-    const user = request.user as UserDocument;
-    if (user.tokens.find((token) => token.kind === provider)) {
-        next();
-    } else {
-        response.status(401).send('Not authorized by a known provider');
+        return response.redirect('/login');
     }
 };

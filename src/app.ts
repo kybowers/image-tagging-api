@@ -62,14 +62,19 @@ app.post('/login', userController.postLogin);
 app.get("/logout", userController.logout);
 app.post('/users', userController.postSignup);
 app.get('/users/self', isAuthenticated, userController.getOwnUser);
-app.get('/users', userController.getAllUsers);
-app.post('/roles', roleController.createRole);
-app.get('/roles', roleController.getRoles);
-app.put('/roles', roleController.updateRole);
+app.get('/users/:userId', isAuthenticated, userController.getUser);
+app.put('/users/:userId', isAuthenticated, userController.updateUser);
+app.get('/users', isAuthenticated, userController.getAllUsers);
+
+app.post('/roles', isAuthenticated, roleController.createRole);
+app.get('/roles', isAuthenticated, roleController.getRoles);
+app.put('/roles/:roleId', isAuthenticated, roleController.updateRole);
+
 app.post('/files', isAuthenticated, fileController.createFile);
 app.get('/files', isAuthenticated, fileController.getFiles);
 app.put('/files/:fileId', isAuthenticated, fileController.saveTags);
 app.get('/files/:fileId', isAuthenticated, fileController.getFile);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));

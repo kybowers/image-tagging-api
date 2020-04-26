@@ -26,9 +26,9 @@ export const updateRole = async (
     response: Response,
     next: NextFunction
 ) => {
-    const { name } = request.body;
-    const filter = { name: name };
-    await Role.findOneAndUpdate(filter, { ...request.body });
+    const id = request.params.roleId;
+    const filter = { _id: id };
+    await Role.findOneAndUpdate(filter, { name: name, ...request.body });
     const role = await Role.findOne(filter);
     if (!role) {
         response.sendStatus(404);

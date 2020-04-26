@@ -6,6 +6,7 @@ export type UserDocument = mongoose.Document & {
     username: string;
     password: string;
     tokens: AuthToken[];
+    apiKey: string;
     role: RoleDocument;
 };
 
@@ -24,6 +25,7 @@ const userSchema = new mongoose.Schema(
         username: { type: String, unique: true },
         password: String,
         tokens: Array,
+        apiKey: String,
         role: { type: Schema.Types.ObjectId, ref: 'Role' },
     },
     { timestamps: true }
